@@ -16,9 +16,9 @@ public class DatabaseConnection {
         try {
             String url = "jdbc:sqlite:" + dbPath;
             this.connection = DriverManager.getConnection(url);
-            System.out.println("Database connection established.");
+            System.out.println("Połączono z bazą.");
         } catch (SQLException e) {
-            System.out.println("An error occurred while connecting to the DB " + e.getMessage());
+            System.out.println("Problem z łączeniem z bazą " + e.getMessage());
         }
     }
 
@@ -26,10 +26,10 @@ public class DatabaseConnection {
         try {
             if(this.connection != null && !this.connection.isClosed()) {
                 this.connection.close();
-                System.out.println("Database connection is closed.");
+                System.out.println("Zamknięto połączenie z bazą.");
             }
         } catch (SQLException e) {
-            System.out.println("An error occurred while disconnecting from the DB " + e.getMessage());
+            System.out.println("disconnect error " + e.getMessage());
         }
     }
 

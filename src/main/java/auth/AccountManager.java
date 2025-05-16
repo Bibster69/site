@@ -26,7 +26,7 @@ public class AccountManager {
                 """)) {
             stmt.execute();
         } catch (SQLException e) {
-            System.err.println("accounts table creation error: " + e.getMessage());
+            System.err.println("błąd przy tworzeniu tabeli accounts: " + e.getMessage());
         }
     }
 
@@ -40,7 +40,7 @@ public class AccountManager {
                 return BCrypt.checkpw(password, hashed);
             }
         } catch (SQLException e) {
-            System.err.println("Auth error: " + e.getMessage());
+            System.err.println("Błąd autentykacji: " + e.getMessage());
         }
         return false;
     }
@@ -63,9 +63,27 @@ public class AccountManager {
                 return new Account(rs.getInt("id"), rs.getString("username"));
             }
         } catch (SQLException e) {
-            System.err.println("Accont retrival error: " + e.getMessage());
+            System.err.println("Błąd przy pobieraniu konta: " + e.getMessage());
         }
         return null;
+    }
+
+    public boolean register(String username, String plainPassword) {
+        String hashed = BCrypt.hashpw(plainPassword, BCrypt.gensalt());
+        try (PreparedStatement stmt = this.connection.prepareStatement(
+                "INSERT INTO accounts (username, password) VALUES (?, ?);")) {
+            stmt.setString(1, username);
+            stmt.setString(2, hashed);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            if (e.getMessage().contains("UNIQUE")) {
+                System.out.println("Użytkownik '" + username + "' już istnieje.");
+            } else {
+                System.err.println("Błąd rejestracji: " + e.getMessage());
+            }
+            return false;
+        }
     }
 
 }
