@@ -1,36 +1,49 @@
 package database;
-
+import java.util.HashMap;
+import java.util.Map;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    private java.sql.Connection connection;
 
+    static private final Map<String, Connection> connections = new HashMap<>();
 
-    public Connection getConnection() {
-        return this.connection;
+    static public Connection getConnection() {
+        return getConnection("");
     }
 
-    public void connect(String dbPath) throws SQLException {
+    static public Connection getConnection(String name) {
+        return connections.get(name);
+    }
+
+    static public void connect(String filePath) {
+        connect(filePath, "");
+    }
+
+    static public void connect(String filePath, String connectionName){
         try {
-            String url = "jdbc:sqlite:" + dbPath;
-            this.connection = DriverManager.getConnection(url);
-            System.out.println("Połączono z bazą.");
+            Connection connection = DriverManager.getConnection("jdbc:sqlite:" + filePath);
+            connections.put(connectionName, connection);
+            System.out.println("Połączono do: " + connectionName);
         } catch (SQLException e) {
-            System.out.println("Problem z łączeniem z bazą " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
-    public void disconnect() throws SQLException {
-        try {
-            if(this.connection != null && !this.connection.isClosed()) {
-                this.connection.close();
-                System.out.println("Zamknięto połączenie z bazą.");
-            }
-        } catch (SQLException e) {
-            System.out.println("disconnect error " + e.getMessage());
-        }
+    static public void disconnect() {
+        disconnect("");
     }
 
+    static public void disconnect(String connectionName){
+        try {
+            Connection connection = connections.get(connectionName);
+            connection.close();
+            connections.remove(connectionName);
+            System.out.println("Rozłączone z " + connectionName);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
+

@@ -6,7 +6,7 @@
 
     <groupId>com.github.bibster69</groupId>
     <artifactId>site</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
 
     <name>Site Library</name>
     <description>Biblioteka do obsługi bazy i kont użytkowników</description>
@@ -34,9 +34,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.mindrot</groupId>
-            <artifactId>jbcrypt</artifactId>
-            <version>0.4</version>
+            <groupId>at.favre.lib</groupId>
+            <artifactId>bcrypt</artifactId>
+            <version>0.10.2</version>
         </dependency>
 
         <dependency>
