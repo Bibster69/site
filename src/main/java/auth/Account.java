@@ -65,7 +65,7 @@ public class Account {
                 throw new RuntimeException(e);
             }
         }
-
+//
         public static Account authenticate(String username, String password) throws AuthenticationException {
             try {
                 String sql = "SELECT id, username, password FROM account WHERE username = ?";
